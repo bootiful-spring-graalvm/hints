@@ -44,8 +44,8 @@ public class Fabric8NativeConfiguration implements NativeConfiguration {
 
 		if (!HintsUtils.isClassPresent("io.fabric8.kubernetes.api.model.KubernetesResource"))
 			return;
-
-		log.info("running " + Fabric8NativeConfiguration.class.getName());
+		if (log.isDebugEnabled())
+			log.debug("running " + Fabric8NativeConfiguration.class.getName());
 		var impls = reflections.getAllTypes().stream().filter(cname -> cname.endsWith("Impl")) //
 				.map((Function<String, Class<?>>) this::forName).collect(Collectors.toSet());
 		var subtypesOfKubernetesResource = reflections.getSubTypesOf(KubernetesResource.class);
@@ -60,8 +60,8 @@ public class Fabric8NativeConfiguration implements NativeConfiguration {
 		combined.addAll(this.resolveSerializationClasses(JsonSerialize.class));
 		combined.addAll(this.resolveSerializationClasses(JsonDeserialize.class));
 		combined.stream().filter(Objects::nonNull).forEach(c -> {
-			if (log.isInfoEnabled()) {
-				log.info("trying to register " + c.getName() + " for reflection");
+			if (log.isDebugEnabled()) {
+				log.debug("trying to register " + c.getName() + " for reflection");
 			}
 			registry.reflection().forType(c).withAccess(TypeAccess.values()).build();
 		});

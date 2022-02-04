@@ -18,8 +18,10 @@ import org.apache.lucene.util.AttributeImpl;
  * An AttributeFactory creates instances of {@link AttributeImpl}s.
  *
  * @author Gunnar Morling
+ * @author Josh Long
  */
-@TargetClass(className = "org.apache.lucene.util.AttributeFactory$DefaultAttributeFactory")
+@TargetClass(onlyWith = LuceneBooleanSupplier.class,
+		className = "org.apache.lucene.util.AttributeFactory$DefaultAttributeFactory")
 public final class DefaultAttributeFactorySubstitution {
 
 	public DefaultAttributeFactorySubstitution() {

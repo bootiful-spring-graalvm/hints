@@ -9,17 +9,20 @@ package io.cloudnativejava.lucene;
 
 import com.oracle.svm.core.annotate.Substitute;
 import com.oracle.svm.core.annotate.TargetClass;
+import io.cloudnativejava.HintsUtils;
 import org.apache.lucene.util.AttributeImpl;
 
 import java.lang.invoke.MethodHandle;
+import java.util.function.BooleanSupplier;
 
 /**
  * An AttributeFactory creates instances of {@link AttributeImpl}s.
  *
  * @author Gunnar Morling
+ * @author Josh Long
  */
 
-@TargetClass(className = "org.apache.lucene.util.AttributeFactory")
+@TargetClass(onlyWith = LuceneBooleanSupplier.class, className = "org.apache.lucene.util.AttributeFactory")
 public final class AttributeFactorySubstitution {
 
 	public AttributeFactorySubstitution() {

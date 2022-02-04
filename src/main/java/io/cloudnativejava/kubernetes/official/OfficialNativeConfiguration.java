@@ -1,7 +1,7 @@
 package io.cloudnativejava.kubernetes.official;
 
 import com.google.gson.annotations.JsonAdapter;
-import io.cloudnativejava.kubernetes.HintsUtils;
+import io.cloudnativejava.HintsUtils;
 import io.swagger.annotations.ApiModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

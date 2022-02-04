@@ -2,6 +2,7 @@ org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.BeanF
   io.cloudnativejava.kubernetes.fabric8.Fabric8BeanFactoryNativeConfigurationProcessor
 org.springframework.nativex.type.NativeConfiguration=\
   io.cloudnativejava.lucene.LuceneNativeConfiguration,\
+  io.cloudnativejava.liquibase.LiquibaseNativeConfiguration,\
   io.cloudnativejava.templating.TemplateNativeConfiguration,\
   io.cloudnativejava.kubernetes.official.OfficialNativeConfiguration,\
   io.cloudnativejava.kubernetes.fabric8.Fabric8NativeConfiguration

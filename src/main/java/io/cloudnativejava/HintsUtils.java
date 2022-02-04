@@ -1,4 +1,4 @@
-package io.cloudnativejava.kubernetes;
+package io.cloudnativejava;
 
 import org.springframework.util.ClassUtils;
 

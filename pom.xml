@@ -24,6 +24,11 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.graalvm.nativeimage</groupId>
             <artifactId>svm</artifactId>
             <version>21.3.0</version>

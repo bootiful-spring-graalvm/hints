@@ -2,7 +2,7 @@ package io.cloudnativejava.kubernetes.fabric8;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.cloudnativejava.kubernetes.HintsUtils;
+import io.cloudnativejava.HintsUtils;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.Client;
 import io.fabric8.kubernetes.client.ExtensionAdapter;

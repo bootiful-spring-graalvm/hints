@@ -35,6 +35,18 @@ import java.util.stream.Collectors;
 @NativeHint(options = { "-H:+AddAllCharsets", "--enable-https", "--enable-url-protocols=https" })
 public class Fabric8NativeConfiguration implements NativeConfiguration {
 
+	@Override
+	public boolean isValid(AotOptions aotOptions) {
+		try {
+			Class.forName("io.fabric8.kubernetes.api.model.KubernetesResource");
+			return true;
+		} //
+		catch (Throwable e) {
+			return false;
+		}
+
+	}
+
 	private final Reflections reflections = new Reflections("io.fabric8", new TypeAnnotationsScanner(),
 			new SubTypesScanner(false));
 

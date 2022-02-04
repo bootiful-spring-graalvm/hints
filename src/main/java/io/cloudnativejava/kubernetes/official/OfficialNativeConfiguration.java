@@ -10,6 +10,7 @@ import org.springframework.nativex.AotOptions;
 import org.springframework.nativex.hint.NativeHint;
 import org.springframework.nativex.hint.TypeHint;
 import org.springframework.nativex.type.NativeConfiguration;
+import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
@@ -52,6 +53,9 @@ public class OfficialNativeConfiguration implements NativeConfiguration {
 
 	@Override
 	public void computeHints(NativeConfigurationRegistry registry, AotOptions aotOptions) {
+
+		if (!ClassUtils.isPresent("io.kubernetes.client.extended.controller.Controller", getClass().getClassLoader()))
+			return;
 
 		var reflections = new Reflections("io.kubernetes");
 		var apiModels = reflections.getTypesAnnotatedWith(ApiModel.class);

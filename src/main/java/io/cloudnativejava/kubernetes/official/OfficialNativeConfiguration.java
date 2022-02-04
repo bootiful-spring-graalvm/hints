@@ -1,6 +1,7 @@
 package io.cloudnativejava.kubernetes.official;
 
 import com.google.gson.annotations.JsonAdapter;
+import io.cloudnativejava.kubernetes.HintsUtils;
 import io.swagger.annotations.ApiModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import org.springframework.nativex.AotOptions;
 import org.springframework.nativex.hint.NativeHint;
 import org.springframework.nativex.hint.TypeHint;
 import org.springframework.nativex.type.NativeConfiguration;
-import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
@@ -54,7 +54,7 @@ public class OfficialNativeConfiguration implements NativeConfiguration {
 	@Override
 	public void computeHints(NativeConfigurationRegistry registry, AotOptions aotOptions) {
 
-		if (!ClassUtils.isPresent("io.kubernetes.client.extended.controller.Controller", getClass().getClassLoader()))
+		if (!HintsUtils.isClassPresent("io.kubernetes.client.extended.controller.Controller"))
 			return;
 
 		var reflections = new Reflections("io.kubernetes");

@@ -1,5 +1,6 @@
 package io.cloudnativejava.kubernetes.fabric8;
 
+import io.cloudnativejava.kubernetes.HintsUtils;
 import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.CustomResourceList;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.nativex.hint.TypeAccess;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.util.HashSet;
@@ -26,7 +26,7 @@ public class Fabric8BeanFactoryNativeConfigurationProcessor implements BeanFacto
 	@Override
 	public void process(ConfigurableListableBeanFactory beanFactory, NativeConfigurationRegistry registry) {
 
-		if (!ClassUtils.isPresent("io.fabric8.kubernetes.client.CustomResource", getClass().getClassLoader()))
+		if (!HintsUtils.isClassPresent("io.fabric8.kubernetes.client.CustomResource"))
 			return;
 
 		var registerMe = new HashSet<Class<?>>();

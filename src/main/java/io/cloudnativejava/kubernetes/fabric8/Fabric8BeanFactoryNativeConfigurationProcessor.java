@@ -15,7 +15,7 @@ import org.springframework.util.ReflectionUtils;
 import java.util.HashSet;
 
 /**
- * Registers everything in Spring Boot userspace packages, as well
+ * Registers Fabric8 types in Spring Boot userspace packages, as well.
  *
  * @author Josh Long
  */

@@ -59,6 +59,8 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 	@Override
 	@SneakyThrows
 	public void computeHints(NativeConfigurationRegistry registry, AotOptions aotOptions) {
+
+		log.info("evaluating " + getClass().getName());
 		if (!ClassUtils.isPresent("liquibase.plugin.AbstractPlugin", getClass().getClassLoader()))
 			return;
 

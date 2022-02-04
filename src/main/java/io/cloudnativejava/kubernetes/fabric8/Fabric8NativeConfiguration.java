@@ -33,86 +33,87 @@ import java.util.stream.Collectors;
  * @author Josh Long
  */
 @Slf4j
-@NativeHint(options = {"-H:+AddAllCharsets", "--enable-https", "--enable-url-protocols=https"})
+@NativeHint(options = { "-H:+AddAllCharsets", "--enable-https", "--enable-url-protocols=https" })
 public class Fabric8NativeConfiguration implements NativeConfiguration {
 
+	private final Reflections reflections = new Reflections("io.fabric8", new TypeAnnotationsScanner(),
+			new SubTypesScanner(false));
 
-    private final Reflections reflections = new Reflections("io.fabric8", new TypeAnnotationsScanner(),
-            new SubTypesScanner(false));
+	@Override
+	public void computeHints(NativeConfigurationRegistry registry, AotOptions aotOptions) {
 
-    @Override
-    public void computeHints(NativeConfigurationRegistry registry, AotOptions aotOptions) {
+		if (!ClassUtils.isPresent("io.fabric8.kubernetes.api.model.KubernetesResource", getClass().getClassLoader()))
+			return;
 
-        if (!ClassUtils.isPresent("io.fabric8.kubernetes.api.model.KubernetesResource", getClass().getClassLoader()))
-            return;
+		log.info("running " + Fabric8NativeConfiguration.class.getName());
+		var impls = reflections.getAllTypes().stream().filter(cname -> cname.endsWith("Impl")) //
+				.map((Function<String, Class<?>>) this::forName).collect(Collectors.toSet());
+		var subtypesOfKubernetesResource = reflections.getSubTypesOf(KubernetesResource.class);
+		var othersToAddForReflection = List.of(io.fabric8.kubernetes.internal.KubernetesDeserializer.class);
+		var clients = this.reflections.getSubTypesOf(Client.class);
+		var combined = new HashSet<Class<?>>();
+		combined.addAll(subtypesOfKubernetesResource);
+		combined.addAll(othersToAddForReflection);
+		combined.addAll(registerExtensionAdapters());
+		combined.addAll(impls);
+		combined.addAll(clients);
+		combined.addAll(this.resolveSerializationClasses(JsonSerialize.class));
+		combined.addAll(this.resolveSerializationClasses(JsonDeserialize.class));
+		combined.stream().filter(Objects::nonNull).forEach(c -> {
+			if (log.isInfoEnabled()) {
+				log.info("trying to register " + c.getName() + " for reflection");
+			}
+			registry.reflection().forType(c).withAccess(TypeAccess.values()).build();
+		});
+	}
 
-        log.info("running " + Fabric8NativeConfiguration.class.getName());
-        var impls = reflections.getAllTypes().stream().filter(cname -> cname.endsWith("Impl")) //
-                .map((Function<String, Class<?>>) this::forName).collect(Collectors.toSet());
-        var subtypesOfKubernetesResource = reflections.getSubTypesOf(KubernetesResource.class);
-        var othersToAddForReflection = List.of(io.fabric8.kubernetes.internal.KubernetesDeserializer.class);
-        var clients = this.reflections.getSubTypesOf(Client.class);
-        var combined = new HashSet<Class<?>>();
-        combined.addAll(subtypesOfKubernetesResource);
-        combined.addAll(othersToAddForReflection);
-        combined.addAll(registerExtensionAdapters());
-        combined.addAll(impls);
-        combined.addAll(clients);
-        combined.addAll(this.resolveSerializationClasses(JsonSerialize.class));
-        combined.addAll(this.resolveSerializationClasses(JsonDeserialize.class));
-        combined.stream().filter(Objects::nonNull).forEach(c -> {
-            if (log.isInfoEnabled()) {
-                log.info("trying to register " + c.getName() + " for reflection");
-            }
-            registry.reflection().forType(c).withAccess(TypeAccess.values()).build();
-        });
-    }
+	@SneakyThrows
+	private Class<?> forName(String name) {
+		return Class.forName(name);
+	}
 
-    @SneakyThrows
-    private Class<?> forName(String name) {
-        return Class.forName(name);
-    }
+	private Set<Class<?>> registerExtensionAdapters() {
+		Set<Class<? extends ExtensionAdapter>> subTypesOf = this.reflections.getSubTypesOf(ExtensionAdapter.class);
 
-    private Set<Class<?>> registerExtensionAdapters() {
-        Set<Class<? extends ExtensionAdapter>> subTypesOf = this.reflections.getSubTypesOf(ExtensionAdapter.class);
+		Set<Class<?>> classes = new HashSet<>();
 
-        Set<Class<?>> classes = new HashSet<>();
+		for (var c : subTypesOf) {
+			classes.add(c);
+			Map<TypeVariable, Type> typeVariableMap = GenericTypeResolver.getTypeVariableMap(c);
+			typeVariableMap.forEach((tv, clazz) -> {
+				log.info("trying to register " + clazz.getTypeName() + '.');
+				try {
+					classes.add(Class.forName(clazz.getTypeName()));
+				}
+				catch (ClassNotFoundException e) {
+					ReflectionUtils.rethrowRuntimeException(e);
+				}
 
-        for (var c : subTypesOf) {
-            classes.add(c);
-            Map<TypeVariable, Type> typeVariableMap = GenericTypeResolver.getTypeVariableMap(c);
-            typeVariableMap.forEach((tv, clazz) -> {
-                log.info("trying to register " + clazz.getTypeName() + '.');
-                try {
-                    classes.add(Class.forName(clazz.getTypeName()));
-                } catch (ClassNotFoundException e) {
-                    ReflectionUtils.rethrowRuntimeException(e);
-                }
+			});
+		}
+		return classes;
+	}
 
-            });
-        }
-        return classes;
-    }
-
-    @SneakyThrows
-    private <R extends Annotation> Set<Class<?>> resolveSerializationClasses(Class<R> annotationClazz) {
-        log.info("trying to resolve types annotated with " + annotationClazz.getName());
-        var method = annotationClazz.getMethod("using");
-        var classes = this.reflections.getTypesAnnotatedWith(annotationClazz);
-        return classes.stream().map(clazzWithAnnotation -> {
-            if (log.isInfoEnabled()) {
-                log.info("found " + clazzWithAnnotation.getName() + " : " + annotationClazz.getName());
-            }
-            var annotation = clazzWithAnnotation.getAnnotation(annotationClazz);
-            try {
-                if (annotation != null) {
-                    return (Class<?>) method.invoke(annotation);
-                }
-            } catch (Exception e) {
-                ReflectionUtils.rethrowRuntimeException(e);
-            }
-            return null;
-        }).collect(Collectors.toSet());
-    }
+	@SneakyThrows
+	private <R extends Annotation> Set<Class<?>> resolveSerializationClasses(Class<R> annotationClazz) {
+		log.info("trying to resolve types annotated with " + annotationClazz.getName());
+		var method = annotationClazz.getMethod("using");
+		var classes = this.reflections.getTypesAnnotatedWith(annotationClazz);
+		return classes.stream().map(clazzWithAnnotation -> {
+			if (log.isInfoEnabled()) {
+				log.info("found " + clazzWithAnnotation.getName() + " : " + annotationClazz.getName());
+			}
+			var annotation = clazzWithAnnotation.getAnnotation(annotationClazz);
+			try {
+				if (annotation != null) {
+					return (Class<?>) method.invoke(annotation);
+				}
+			}
+			catch (Exception e) {
+				ReflectionUtils.rethrowRuntimeException(e);
+			}
+			return null;
+		}).collect(Collectors.toSet());
+	}
 
 }

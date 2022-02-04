@@ -115,7 +115,7 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            -->
+
             <plugin>
                 <inherited>true</inherited>
                 <groupId>io.spring.javaformat</groupId>
@@ -132,20 +132,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>io.spring.javaformat</groupId>
-                <artifactId>spring-javaformat-maven-plugin</artifactId>
-                <version>0.0.29</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <inherited>true</inherited>
-                        <goals>
-                            <goal>validate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.experimental</groupId>
                 <artifactId>spring-aot-maven-plugin</artifactId>

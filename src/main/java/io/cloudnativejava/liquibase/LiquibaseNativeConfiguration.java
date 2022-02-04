@@ -5,6 +5,7 @@ import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.datatype.LiquibaseDataType;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.NativeConfigurationRegistry;
 import org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.NativeResourcesEntry;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  *
  * @author Josh Long
  */
+@Slf4j
 public class LiquibaseNativeConfiguration implements NativeConfiguration {
 
 	private final String[] typeNames = { "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl",
@@ -94,6 +96,8 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 		var values = TypeAccess.values();
 		for (var c : compositeTypes)
 			registry.reflection().forType(c).withAccess(values).build();
+
+		log.info("registered " + compositeTypes.size() + " types for reflection for Liquibase");
 
 	}
 

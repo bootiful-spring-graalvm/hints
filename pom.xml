@@ -6,19 +6,16 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.3</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/> 
     </parent>
-    <groupId>com.example</groupId>
+    <groupId>com.joshlong</groupId>
     <artifactId>hints</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>hints</name>
-    <description>Hints for various projects</description>
     <properties>
         <java.version>11</java.version>
         <repackage.classifier/>
         <spring-native.version>0.11.1</spring-native.version>
-        <artifactory-maven-plugin.version>3.2.3
-        </artifactory-maven-plugin.version>
+        <artifactory-maven-plugin.version>3.2.3</artifactory-maven-plugin.version>
         <reflections.version>0.9.11</reflections.version>
         <fabric8.version>5.11.1</fabric8.version>
         <kubernetes-client-java.version>14.0.0</kubernetes-client-java.version>

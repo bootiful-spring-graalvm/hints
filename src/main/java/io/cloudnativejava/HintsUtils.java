@@ -8,4 +8,14 @@ public abstract class HintsUtils {
 		return ClassUtils.isPresent(className, HintsUtils.class.getClassLoader());
 	}
 
+	public static Class<?> classForName(String clazzName) {
+		try {
+			return Class.forName(clazzName);
+		} //
+		catch (Exception e) {
+			return null;
+		}
+
+	}
+
 }

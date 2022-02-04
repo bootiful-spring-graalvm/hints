@@ -1,5 +1,6 @@
 package io.cloudnativejava.liquibase;
 
+import io.cloudnativejava.HintsUtils;
 import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.datatype.LiquibaseDataType;
@@ -82,7 +83,7 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 		compositeTypes.addAll(liquibaseTypes);
 		compositeTypes.addAll(databases);
 		compositeTypes.addAll(Arrays.asList(types));
-		compositeTypes.addAll(Arrays.stream(this.typeNames).map(this::forClassName).collect(Collectors.toSet()));
+		compositeTypes.addAll(Arrays.stream(this.typeNames).map(HintsUtils::classForName).collect(Collectors.toSet()));
 
 		for (var b : this.bundles)
 			registry.resources().add(NativeResourcesEntry.ofBundle(b));
@@ -94,16 +95,6 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 		for (var c : compositeTypes)
 			registry.reflection().forType(c).withAccess(values).build();
 
-	}
-
-	@SneakyThrows
-	private Class<?> forClassName(String cn) {
-		try {
-			return Class.forName(cn);
-		} //
-		catch (Exception e) {
-			return null;
-		}
 	}
 
 }

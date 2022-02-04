@@ -1,0 +1,7 @@
+
+org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.BeanFactoryNativeConfigurationProcessor=\
+  io.cloudnativejava.kubernetes.fabric8.Fabric8BeanFactoryNativeConfigurationProcessor
+
+org.springframework.nativex.type.NativeConfiguration=\
+  io.cloudnativejava.kubernetes.official.OfficialNativeConfiguration,\
+  io.cloudnativejava.kubernetes.fabric8.Fabric8NativeConfiguration

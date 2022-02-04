@@ -23,36 +23,35 @@ import java.util.HashSet;
 @Slf4j
 public class Fabric8BeanFactoryNativeConfigurationProcessor implements BeanFactoryNativeConfigurationProcessor {
 
+	@Override
+	public void process(ConfigurableListableBeanFactory beanFactory, NativeConfigurationRegistry registry) {
 
-    @Override
-    public void process(ConfigurableListableBeanFactory beanFactory, NativeConfigurationRegistry registry) {
+		if (!ClassUtils.isPresent("io.fabric8.kubernetes.client.CustomResource", getClass().getClassLoader()))
+			return;
 
-        if (!ClassUtils.isPresent("io.fabric8.kubernetes.client.CustomResource", getClass().getClassLoader()))
-            return;
+		var registerMe = new HashSet<Class<?>>();
+		var strings = AutoConfigurationPackages.get(beanFactory);
+		for (var pkg : strings) {
+			var reflections = new Reflections(pkg);
+			var customResources = reflections.getSubTypesOf(CustomResource.class);
+			registerMe.addAll(customResources);
+			registerMe.addAll(reflections.getSubTypesOf(CustomResourceList.class));
+			customResources.forEach(cr -> GenericTypeResolver.getTypeVariableMap(cr).forEach((tv, clazz) -> {
+				try {
+					var type = Class.forName(clazz.getTypeName());
+					if (log.isDebugEnabled())
+						log.debug(
+								"the type variable is " + type.getName() + " and the class is " + clazz.getTypeName());
+					registerMe.add(type);
+				} //
+				catch (ClassNotFoundException e) {
+					ReflectionUtils.rethrowRuntimeException(e);
+				}
+			}));
 
-        var registerMe = new HashSet<Class<?>>();
-        var strings = AutoConfigurationPackages.get(beanFactory);
-        for (var pkg : strings) {
-            var reflections = new Reflections(pkg);
-            var customResources = reflections.getSubTypesOf(CustomResource.class);
-            registerMe.addAll(customResources);
-            registerMe.addAll(reflections.getSubTypesOf(CustomResourceList.class));
-            customResources.forEach(cr -> GenericTypeResolver.getTypeVariableMap(cr).forEach((tv, clazz) -> {
-                try {
-                    var type = Class.forName(clazz.getTypeName());
-                    if (log.isDebugEnabled())
-                        log.debug(
-                                "the type variable is " + type.getName() + " and the class is " + clazz.getTypeName());
-                    registerMe.add(type);
-                } //
-                catch (ClassNotFoundException e) {
-                    ReflectionUtils.rethrowRuntimeException(e);
-                }
-            }));
-
-        }
-        registerMe.forEach(c -> registry.reflection().forType(c).withAccess(TypeAccess.values()).build());
-        registerMe.forEach(c -> log.info("registering " + c.getName() + '.'));
-    }
+		}
+		registerMe.forEach(c -> registry.reflection().forType(c).withAccess(TypeAccess.values()).build());
+		registerMe.forEach(c -> log.info("registering " + c.getName() + '.'));
+	}
 
 }

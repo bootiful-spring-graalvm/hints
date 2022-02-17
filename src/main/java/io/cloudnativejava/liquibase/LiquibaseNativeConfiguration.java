@@ -4,6 +4,7 @@ import io.cloudnativejava.HintsUtils;
 import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.datatype.LiquibaseDataType;
+import liquibase.serializer.LiquibaseSerializable;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
@@ -32,27 +33,9 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 			"com.sun.org.apache.xerces.internal.impl.dv.xs.ExtendedSchemaDVFactoryImpl", };
 
 	private final String[] resources = { "liquibase.build.properties",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd",
-			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd",
-			"www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd", "www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd",
-			"www.liquibase.org/xml/ns/pro/liquibase-pro-3.10.xsd", "www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd",
-			"www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd", "www.liquibase.org/xml/ns/pro/liquibase-pro-4.2.xsd",
-			"www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd",
-			"www.liquibase.org/xml/ns/pro/liquibase-pro-4.4.xsd", };
+			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-.*\\.xsd",
+			"www.liquibase.org/xml/ns/pro/liquibase-.*\\.xsd",
+	};
 
 	private final String[] bundles = { "liquibase/i18n/liquibase-core", };
 
@@ -81,11 +64,13 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 		var reflections = new Reflections("liquibase");
 		var changes = reflections.getSubTypesOf(Change.class);
 		var liquibaseTypes = reflections.getSubTypesOf(LiquibaseDataType.class);
+		var liquibaseSerializables = reflections.getSubTypesOf(LiquibaseSerializable.class);
 		var databases = reflections.getSubTypesOf(Database.class);
 
 		var compositeTypes = new HashSet<Class<?>>();
 		compositeTypes.addAll(changes);
 		compositeTypes.addAll(liquibaseTypes);
+		compositeTypes.addAll(liquibaseSerializables);
 		compositeTypes.addAll(databases);
 		compositeTypes.addAll(Arrays.asList(types));
 		compositeTypes.addAll(Arrays.stream(this.typeNames).map(HintsUtils::classForName).collect(Collectors.toSet()));

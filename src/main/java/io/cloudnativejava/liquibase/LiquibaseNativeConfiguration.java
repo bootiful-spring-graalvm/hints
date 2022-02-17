@@ -64,8 +64,9 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 		if (!ClassUtils.isPresent("liquibase.plugin.AbstractPlugin", getClass().getClassLoader()))
 			return;
 
-		Class<?>[] types = { liquibase.lockservice.StandardLockService.class, liquibase.plugin.AbstractPlugin.class,
-				liquibase.sql.visitor.AppendSqlVisitor.class, liquibase.parser.ChangeLogParserCofiguration.class,
+		var types = new Class<?>[] { liquibase.lockservice.StandardLockService.class,
+				liquibase.plugin.AbstractPlugin.class, liquibase.sql.visitor.AppendSqlVisitor.class,
+				liquibase.parser.ChangeLogParserCofiguration.class,
 				liquibase.serializer.AbstractLiquibaseSerializable.class,
 				liquibase.sql.visitor.RegExpReplaceSqlVisitor.class, liquibase.change.ConstraintsConfig.class,
 				liquibase.sql.visitor.PrependSqlVisitor.class, liquibase.license.LicenseServiceFactory.class,

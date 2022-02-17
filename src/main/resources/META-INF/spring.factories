@@ -5,7 +5,9 @@ org.springframework.nativex.type.NativeConfiguration=\
   io.cloudnativejava.liquibase.LiquibaseNativeConfiguration,\
   io.cloudnativejava.templating.TemplateNativeConfiguration,\
   io.cloudnativejava.kubernetes.official.OfficialNativeConfiguration,\
-  io.cloudnativejava.kubernetes.fabric8.Fabric8NativeConfiguration
+  io.cloudnativejava.kubernetes.fabric8.Fabric8NativeConfiguration,\
+  io.cloudnativejava.twitter4j.Twitter4jNativeConfiguration
+
 
 
 

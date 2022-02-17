@@ -24,6 +24,12 @@
     </properties>
     <dependencies>
         <dependency>
+            <optional>true</optional>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>[4.0,)</version>
+        </dependency>
+        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <optional>true</optional>
@@ -32,7 +38,7 @@
             <groupId>org.graalvm.nativeimage</groupId>
             <artifactId>svm</artifactId>
             <version>21.3.0</version>
-<!--             <scope>provided</scope> -->
+            <!--             <scope>provided</scope> -->
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>

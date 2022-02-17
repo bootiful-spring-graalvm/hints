@@ -34,8 +34,7 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 
 	private final String[] resources = { "liquibase.build.properties",
 			"www.liquibase.org/xml/ns/dbchangelog/dbchangelog-.*\\.xsd",
-			"www.liquibase.org/xml/ns/pro/liquibase-.*\\.xsd",
-	};
+			"www.liquibase.org/xml/ns/pro/liquibase-.*\\.xsd", };
 
 	private final String[] bundles = { "liquibase/i18n/liquibase-core", };
 

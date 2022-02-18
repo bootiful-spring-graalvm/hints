@@ -14,7 +14,6 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.NativeConfigurationRegistry;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.nativex.AotOptions;
-import org.springframework.nativex.hint.NativeHint;
 import org.springframework.nativex.hint.TypeAccess;
 import org.springframework.nativex.type.NativeConfiguration;
 import org.springframework.util.ReflectionUtils;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
  * @author Josh Long
  */
 @Slf4j
-@NativeHint(options = { "-H:+AddAllCharsets", "--enable-https", "--enable-url-protocols=https" })
+
 public class Fabric8NativeConfiguration implements NativeConfiguration {
 
 	private final Reflections reflections = new Reflections("io.fabric8", new TypeAnnotationsScanner(),

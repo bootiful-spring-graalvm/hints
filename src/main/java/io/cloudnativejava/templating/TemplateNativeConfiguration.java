@@ -6,7 +6,6 @@ import org.springframework.nativex.hint.ResourceHint;
 import org.springframework.nativex.type.NativeConfiguration;
 
 @ResourceHint(patterns = { "org/commonmark/internal/util/entities.properties" })
-@NativeHint(options = "-H:+AddAllCharsets")
 @Slf4j
 public class TemplateNativeConfiguration implements NativeConfiguration {
 

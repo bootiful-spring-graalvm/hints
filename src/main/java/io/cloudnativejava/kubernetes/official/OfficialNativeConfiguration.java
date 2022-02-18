@@ -37,8 +37,7 @@ import static org.springframework.nativex.hint.TypeAccess.*;
  * @author Christian Tzolov
  */
 @NativeHint(//
-		options = { "-H:+AddAllCharsets", "--enable-all-security-services", "--enable-https", "--enable-http" },
-		types = { //
+		options = {}, types = { //
 				@TypeHint( //
 						access = { DECLARED_CLASSES, DECLARED_CONSTRUCTORS, DECLARED_FIELDS, DECLARED_METHODS }, //
 						typeNames = { //

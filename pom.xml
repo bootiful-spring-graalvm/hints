@@ -12,6 +12,8 @@
     <artifactId>hints</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <properties>
+        <graalvm.version>22.0.0</graalvm.version>
+        <native-buildtools.version>0.9.9</native-buildtools.version>
         <java.version>11</java.version>
         <repackage.classifier/>
         <lucene.version>8.6.2</lucene.version>
@@ -25,6 +27,11 @@
     <dependencies>
         <dependency>
             <optional>true</optional>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <optional>true</optional>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
             <version>[4.0,)</version>
@@ -36,8 +43,8 @@
         </dependency>
         <dependency>
             <groupId>org.graalvm.nativeimage</groupId>
-            <artifactId>svm</artifactId>
-            <version>21.3.0</version>
+            <artifactId>graal-hotspot-library</artifactId>
+            <version>${graalvm.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
@@ -86,11 +93,9 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.experimental</groupId>
-            <artifactId>spring-aot</artifactId>
+            <artifactId>spring-aot </artifactId>
             <version>${spring-native.version}</version>
-            <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -205,6 +210,11 @@
                 https://cloudnativejava.jfrog.io/cloudnativejava/libs-snapshot
             </url>
         </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -231,7 +241,6 @@
             <id>native</id>
             <properties>
                 <repackage.classifier>exec</repackage.classifier>
-                <native-buildtools.version>0.9.9</native-buildtools.version>
             </properties>
             <dependencies>
                 <dependency>

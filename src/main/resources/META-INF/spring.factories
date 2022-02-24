@@ -1,15 +1,17 @@
-
 org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.BeanFactoryNativeConfigurationProcessor=\
   io.cloudnativejava.kubernetes.fabric8.Fabric8BeanFactoryNativeConfigurationProcessor
-
 org.springframework.nativex.type.NativeConfiguration=\
-  io.cloudnativejava.twitter4j.Twitter4jNativeConfiguration,\
-  io.cloudnativejava.CommonNativeConfiguration,\
-  io.cloudnativejava.lucene.LuceneNativeConfiguration,\
-  io.cloudnativejava.liquibase.LiquibaseNativeConfiguration,\
-  io.cloudnativejava.templating.TemplateNativeConfiguration,\
-  io.cloudnativejava.kubernetes.official.OfficialNativeConfiguration,\
-  io.cloudnativejava.kubernetes.fabric8.Fabric8NativeConfiguration
+    io.cloudnativejava.CommonNativeConfiguration,\
+    io.cloudnativejava.graphql.GraphQlNativeConfiguration, \
+    io.cloudnativejava.twitter4j.Twitter4jNativeConfiguration,\
+    io.cloudnativejava.liquibase.LiquibaseNativeConfiguration,\
+    io.cloudnativejava.kubernetes.official.OfficialNativeConfiguration,\
+    io.cloudnativejava.kubernetes.fabric8.Fabric8NativeConfiguration
+
+#  io.cloudnativejava.lucene.LuceneNativeConfiguration,\
+#  io.cloudnativejava.liquibase.LiquibaseNativeConfiguration,\
+#  io.cloudnativejava.templating.TemplateNativeConfiguration,\
+
 
 
 

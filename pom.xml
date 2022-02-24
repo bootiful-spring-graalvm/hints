@@ -10,7 +10,8 @@
     </parent>
     <groupId>com.joshlong</groupId>
     <artifactId>hints</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+<!--    <version>0.0.1</version>-->
+    <version>0.0.2-SNAPSHOT</version>
     <developers>
         <developer>
             <name>Josh Long</name>
@@ -134,7 +135,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
+                <version>1.6.12</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
@@ -264,11 +265,7 @@
                 https://cloudnativejava.jfrog.io/cloudnativejava/libs-snapshot
             </url>
         </repository>
-        <repository>
-            <id>maven_central</id>
-            <name>Maven Central</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
+
     </repositories>
     <pluginRepositories>
         <pluginRepository>

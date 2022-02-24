@@ -2,6 +2,12 @@ package com.joshlong;
 
 import org.springframework.util.ClassUtils;
 
+/**
+ *
+ * Utilities for working with classes in a consistent way
+ *
+ * @author Josh Long
+ */
 public abstract class HintsUtils {
 
 	public static boolean isClassPresent(String className) {

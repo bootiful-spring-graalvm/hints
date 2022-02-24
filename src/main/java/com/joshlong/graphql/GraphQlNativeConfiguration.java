@@ -1,4 +1,4 @@
-package io.cloudnativejava.graphql;
+package com.joshlong.graphql;
 
 import graphql.GraphQL;
 import graphql.analysis.QueryVisitorFieldArgumentEnvironment;
@@ -11,6 +11,11 @@ import graphql.schema.*;
 import graphql.schema.validation.SchemaValidationErrorCollector;
 import graphql.util.NodeAdapter;
 import graphql.util.NodeZipper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.NativeDetector;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.graphql.boot.GraphQlSourceBuilderCustomizer;
+import org.springframework.graphql.execution.GraphQlSource;
 import org.springframework.nativex.hint.NativeHint;
 import org.springframework.nativex.hint.ResourceHint;
 import org.springframework.nativex.hint.TypeHint;
@@ -22,7 +27,25 @@ import static org.springframework.nativex.hint.TypeAccess.*;
 
 /**
  * Provides Spring Native hints to support using Spring GraphQL in a Spring Native
- * application. The majority of these hints enable the graphiql web console
+ * application. The majority of these hints enable the graphiql web console.
+ * <p>
+ * NB: this still won't be enough to work with Spring GraphQL out-of-the-box. You need to
+ * configure a bean to register the {@link org.springframework.core.io.Resource resources}
+ * for the various schema files.
+ *
+ * <pre>
+ * <code>
+ *     &#64;Bean
+ *     GraphQlSourceBuilderCustomizer graphQlSourceBuilderCustomizer() {
+ *         return builder -> {
+ * 				if (NativeDetector.inNativeImage())
+ * 					builder.schemaResources(new ClassPathResource("graphql/my-schema.graphls"));
+ * 		   };
+ * 		}
+ * </code> </pre>
+ *
+ * You can add as many {@link org.springframework.core.io.Resource resources} to that
+ * implementation as you like.
  *
  * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
  */

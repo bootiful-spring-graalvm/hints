@@ -1,4 +1,4 @@
-package io.cloudnativejava;
+package com.joshlong;
 
 import org.springframework.util.ClassUtils;
 

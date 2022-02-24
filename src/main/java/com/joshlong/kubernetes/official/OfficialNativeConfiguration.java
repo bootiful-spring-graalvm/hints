@@ -1,7 +1,7 @@
-package io.cloudnativejava.kubernetes.official;
+package com.joshlong.kubernetes.official;
 
 import com.google.gson.annotations.JsonAdapter;
-import io.cloudnativejava.HintsUtils;
+import com.joshlong.HintsUtils;
 import io.swagger.annotations.ApiModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +27,9 @@ import static org.springframework.nativex.hint.TypeAccess.*;
  * with the autoconfiguration provided by the official Kubernetes Java client</a>, most of
  * which is code-generated from Swagger. This support automatically registers any
  * code-generated types that have {@link io.swagger.annotations.ApiModel} on it, limiting
- * the registration to the code-generated types in the {@link io.kubernetes} package.
+ * the registration to the code-generated types in the {@code io.kubernetes} package.
  * <p>
- * This hints class also registers options required to use this with a HTTPS API endpoints
+ * This hints class also registers options required to use this with HTTPS API endpoints
  * with custom character sets.
  *
  * @author Josh Long
@@ -37,7 +37,7 @@ import static org.springframework.nativex.hint.TypeAccess.*;
  * @author Christian Tzolov
  */
 @NativeHint(//
-		options = {}, types = { //
+		types = { //
 				@TypeHint( //
 						access = { DECLARED_CLASSES, DECLARED_CONSTRUCTORS, DECLARED_FIELDS, DECLARED_METHODS }, //
 						typeNames = { //

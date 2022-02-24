@@ -1,6 +1,6 @@
-package io.cloudnativejava.kubernetes.fabric8;
+package com.joshlong.kubernetes.fabric8;
 
-import io.cloudnativejava.HintsUtils;
+import com.joshlong.HintsUtils;
 import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.CustomResourceList;
 import lombok.extern.slf4j.Slf4j;

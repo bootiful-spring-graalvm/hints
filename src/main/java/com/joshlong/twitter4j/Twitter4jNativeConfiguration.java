@@ -1,4 +1,4 @@
-package io.cloudnativejava.twitter4j;
+package com.joshlong.twitter4j;
 
 import org.springframework.nativex.hint.NativeHint;
 import org.springframework.nativex.hint.TypeAccess;

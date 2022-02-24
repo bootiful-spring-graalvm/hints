@@ -1,6 +1,6 @@
-package io.cloudnativejava.liquibase;
+package com.joshlong.liquibase;
 
-import io.cloudnativejava.HintsUtils;
+import com.joshlong.HintsUtils;
 import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.datatype.LiquibaseDataType;
@@ -20,7 +20,9 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
- * Supports Liquibase database migrations library
+ * Provides support for Liquibase database migrations. This draws and expands on some
+ * amazing work that <a href="https://twitter.com/ilopmar">Iván López</a> and
+ * <a href="https://twitter.com/mRaible">Matt Raible</a> did.
  *
  * @author Josh Long
  */

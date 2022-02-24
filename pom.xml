@@ -8,9 +8,28 @@
         <version>2.6.3</version>
         <relativePath/>
     </parent>
-    <groupId>io.cloudnativejava</groupId>
+    <groupId>com.joshlong</groupId>
     <artifactId>hints</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <developers>
+        <developer>
+            <name>Josh Long</name>
+            <email>josh@joshlong.com</email>
+            <organization>joshlong.com</organization>
+            <organizationUrl>https://joshlong.com</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/bootiful-spring-graalvm/hints.git</connection>
+        <developerConnection>scm:git:ssh://github.com/bootiful-spring-graalvm/hints.git</developerConnection>
+        <url>https://github.com/bootiful-spring-graalvm/hints/tree/main</url>
+    </scm>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
     <properties>
         <graalvm.version>22.0.0</graalvm.version>
         <native-buildtools.version>0.9.9</native-buildtools.version>
@@ -24,6 +43,18 @@
         <kubernetes-client-java.version>14.0.0</kubernetes-client-java.version>
         <spring-javaformat-maven-plugin.version>0.0.29</spring-javaformat-maven-plugin.version>
     </properties>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.experimental</groupId>
@@ -99,48 +130,89 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jfrog.buildinfo</groupId>
-                <artifactId>artifactory-maven-plugin</artifactId>
-                <version>${artifactory-maven-plugin.version}</version>
-                <inherited>false</inherited>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
-                        <id>build-info</id>
+                        <id>attach-sources</id>
                         <goals>
-                            <goal>publish</goal>
+                            <goal>jar-no-fork</goal>
                         </goals>
-                        <configuration>
-                            <deployProperties>
-                                <build.vcsRevision>
-                                    {{GITHUB_SHA}}
-                                </build.vcsRevision>
-                            </deployProperties>
-                            <publisher>
-                                <contextUrl>
-                                    https://cloudnativejava.jfrog.io/cloudnativejava
-                                </contextUrl>
-                                <username>${env.ARTIFACTORY_USERNAME}
-                                </username>
-                                <password>${env.ARTIFACTORY_PASSWORD}
-                                </password>
-                                <repoKey>libs-release-local</repoKey>
-                                <snapshotRepoKey>libs-snapshot-local
-                                </snapshotRepoKey>
-                            </publisher>
-                            <buildInfo>
-                                <agentName>Github Actions</agentName>
-                                <buildNumber>{{GITHUB_RUN_ID}}
-                                </buildNumber>
-                                <buildUrl>
-                                    http://github.com/{{GITHUB_REPOSITORY}}/actions/runs/{{GITHUB_RUN_ID}}
-                                </buildUrl>
-                                <principal>{{USER}}</principal>
-                                <vcsRevision>{{GITHUB_SHA}}</vcsRevision>
-                            </buildInfo>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--  <plugin>
+                  <groupId>org.jfrog.buildinfo</groupId>
+                  <artifactId>artifactory-maven-plugin</artifactId>
+                  <version>${artifactory-maven-plugin.version}</version>
+                  <inherited>false</inherited>
+                  <executions>
+                      <execution>
+                          <id>build-info</id>
+                          <goals>
+                              <goal>publish</goal>
+                          </goals>
+                          <configuration>
+                              <deployProperties>
+                                  <build.vcsRevision>
+                                      {{GITHUB_SHA}}
+                                  </build.vcsRevision>
+                              </deployProperties>
+                              <publisher>
+                                  <contextUrl>
+                                      https://cloudnativejava.jfrog.io/cloudnativejava
+                                  </contextUrl>
+                                  <username>${env.ARTIFACTORY_USERNAME}
+                                  </username>
+                                  <password>${env.ARTIFACTORY_PASSWORD}
+                                  </password>
+                                  <repoKey>libs-release-local</repoKey>
+                                  <snapshotRepoKey>libs-snapshot-local
+                                  </snapshotRepoKey>
+                              </publisher>
+                              <buildInfo>
+                                  <agentName>Github Actions</agentName>
+                                  <buildNumber>{{GITHUB_RUN_ID}}
+                                  </buildNumber>
+                                  <buildUrl>
+                                      http://github.com/{{GITHUB_REPOSITORY}}/actions/runs/{{GITHUB_RUN_ID}}
+                                  </buildUrl>
+                                  <principal>{{USER}}</principal>
+                                  <vcsRevision>{{GITHUB_SHA}}</vcsRevision>
+                              </buildInfo>
+                          </configuration>
+                      </execution>
+                  </executions>
+              </plugin>-->
 
             <plugin>
                 <inherited>true</inherited>
@@ -157,11 +229,9 @@
                     </execution>
                 </executions>
             </plugin>
-
-
         </plugins>
     </build>
-    <repositories>
+   <!-- <repositories>
         <repository>
             <snapshots>
                 <enabled>false</enabled>
@@ -206,6 +276,6 @@
             </url>
         </pluginRepository>
     </pluginRepositories>
-
+-->
 
 </project>

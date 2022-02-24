@@ -1,4 +1,4 @@
-package io.cloudnativejava;
+package com.joshlong;
 
 import org.springframework.nativex.hint.NativeHint;
 import org.springframework.nativex.type.NativeConfiguration;

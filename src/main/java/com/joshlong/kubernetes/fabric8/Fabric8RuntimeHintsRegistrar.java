@@ -43,8 +43,10 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
 		if (!HintsUtils.isClassPresent("io.fabric8.kubernetes.api.model.KubernetesResource"))
 			return;
+
 		if (log.isDebugEnabled())
 			log.debug("running " + Fabric8RuntimeHintsRegistrar.class.getName());
+
 		var impls = reflections.getAllTypes()//
 				.stream()//
 				.filter(cname -> cname.endsWith("Impl")) //

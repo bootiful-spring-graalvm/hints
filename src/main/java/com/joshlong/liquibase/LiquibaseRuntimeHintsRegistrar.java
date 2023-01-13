@@ -11,7 +11,6 @@ import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ClassUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -111,7 +111,7 @@
 
     <profiles>
         <profile>
-            <id>maven</id>
+            <id>publish</id>
             <build>
                 <plugins>
 

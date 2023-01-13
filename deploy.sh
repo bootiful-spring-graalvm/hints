@@ -5,4 +5,4 @@
 # the build will be deployed to the staging repo
 echo "this script will prompt you for the GPG passphrase"
 export GPG_TTY=$(tty)
-mvn -DskipTests=true clean deploy 
+mvn -DskipTests=true -P publish clean deploy

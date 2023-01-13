@@ -1,54 +1,54 @@
 package com.joshlong.kubernetes.fabric8;
 
-import com.joshlong.HintsUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
+import com.joshlong.HintsUtils;
 import io.fabric8.kubernetes.client.Client;
 import io.fabric8.kubernetes.client.ExtensionAdapter;
+import io.fabric8.kubernetes.client.utils.KubernetesResourceUtil;
+import io.fabric8.kubernetes.internal.KubernetesDeserializer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.NativeConfigurationRegistry;
+import org.springframework.aot.hint.MemberCategory;
+import org.springframework.aot.hint.RuntimeHints;
+import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.core.GenericTypeResolver;
-import org.springframework.nativex.AotOptions;
-import org.springframework.nativex.hint.TypeAccess;
-import org.springframework.nativex.type.NativeConfiguration;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Spring Native support for excellent <a href="https://fabric8.io/">Fabric8 Kubernetes
+ * Spring Boot 3 AOT support for the <a href="https://fabric8.io/">Fabric8 Kubernetes
  * client</a>.
  *
+ * Alternatively, if you want to use <a href="https://github.com/kubernetes-client/java">
+ * the official Kubernetes Java client</a>, there's support in that project directly.
+ *
  * @author Josh Long
+ *
  */
 @Slf4j
+public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
-public class Fabric8NativeConfiguration implements NativeConfiguration {
-
-	private final Reflections reflections = new Reflections("io.fabric8", new TypeAnnotationsScanner(),
-			new SubTypesScanner(false));
+	private final Reflections reflections = new Reflections("io.fabric8");
 
 	@Override
-	public void computeHints(NativeConfigurationRegistry registry, AotOptions aotOptions) {
-
+	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
 		if (!HintsUtils.isClassPresent("io.fabric8.kubernetes.api.model.KubernetesResource"))
 			return;
 		if (log.isDebugEnabled())
-			log.debug("running " + Fabric8NativeConfiguration.class.getName());
-		var impls = reflections.getAllTypes().stream().filter(cname -> cname.endsWith("Impl")) //
-				.map((Function<String, Class<?>>) this::forName).collect(Collectors.toSet());
-		var subtypesOfKubernetesResource = reflections.getSubTypesOf(KubernetesResource.class);
-		var othersToAddForReflection = List.of(io.fabric8.kubernetes.internal.KubernetesDeserializer.class);
+			log.debug("running " + Fabric8RuntimeHintsRegistrar.class.getName());
+		var impls = reflections.getAllTypes()//
+				.stream()//
+				.filter(cname -> cname.endsWith("Impl")) //
+				.map((Function<String, Class<?>>) this::forName)//
+				.collect(Collectors.toSet());
+		var subtypesOfKubernetesResource = reflections.getSubTypesOf(KubernetesResourceUtil.class);
+		var othersToAddForReflection = List.of(KubernetesDeserializer.class);
 		var clients = this.reflections.getSubTypesOf(Client.class);
 		var combined = new HashSet<Class<?>>();
 		combined.addAll(subtypesOfKubernetesResource);
@@ -62,7 +62,7 @@ public class Fabric8NativeConfiguration implements NativeConfiguration {
 			if (log.isDebugEnabled()) {
 				log.debug("trying to register " + c.getName() + " for reflection");
 			}
-			registry.reflection().forType(c).withAccess(TypeAccess.values()).build();
+			hints.reflection().registerType(c, MemberCategory.values());
 		});
 	}
 
@@ -72,13 +72,11 @@ public class Fabric8NativeConfiguration implements NativeConfiguration {
 	}
 
 	private Set<Class<?>> registerExtensionAdapters() {
-		Set<Class<? extends ExtensionAdapter>> subTypesOf = this.reflections.getSubTypesOf(ExtensionAdapter.class);
-
-		Set<Class<?>> classes = new HashSet<>();
-
+		var subTypesOf = this.reflections.getSubTypesOf(ExtensionAdapter.class);
+		var classes = new HashSet<Class<?>>();
 		for (var c : subTypesOf) {
 			classes.add(c);
-			Map<TypeVariable, Type> typeVariableMap = GenericTypeResolver.getTypeVariableMap(c);
+			var typeVariableMap = GenericTypeResolver.getTypeVariableMap(c);
 			typeVariableMap.forEach((tv, clazz) -> {
 				log.info("trying to register " + clazz.getTypeName() + '.');
 				try {

@@ -1,7 +1,7 @@
 package com.joshlong;
 
-import org.springframework.nativex.hint.NativeHint;
-import org.springframework.nativex.type.NativeConfiguration;
+import org.springframework.aot.hint.RuntimeHints;
+import org.springframework.aot.hint.RuntimeHintsRegistrar;
 
 /**
  * Honestly, I don't know why this isn't already setup for <em>all</em> Spring Native
@@ -13,7 +13,13 @@ import org.springframework.nativex.type.NativeConfiguration;
  *
  * @author Josh Long
  */
-@NativeHint(options = { "-H:+AddAllCharsets", "--enable-https", "--enable-http", })
-public class CommonNativeConfiguration implements NativeConfiguration {
+// todo
+// @NativeHint(options = { "-H:+AddAllCharsets", "--enable-https", "--enable-http", })
+public class CommonNativeConfiguration implements RuntimeHintsRegistrar {
+
+	@Override
+	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+
+	}
 
 }

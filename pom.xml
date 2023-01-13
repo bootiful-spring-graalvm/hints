@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.3</version>
+        <version>3.0.1</version>
         <relativePath/>
     </parent>
     <groupId>com.joshlong</groupId>
     <artifactId>hints</artifactId>
 <!--    <version>0.0.1</version>-->
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <developers>
         <developer>
             <name>Josh Long</name>
@@ -32,100 +32,81 @@
         </license>
     </licenses>
     <properties>
-        <graalvm.version>22.0.0</graalvm.version>
-        <native-buildtools.version>0.9.9</native-buildtools.version>
-        <java.version>11</java.version>
-        <repackage.classifier/>
+
+        
+        <java.version>17</java.version>
+        
         <lucene.version>8.6.2</lucene.version>
-        <spring-native.version>0.11.1</spring-native.version>
-        <artifactory-maven-plugin.version>3.2.3</artifactory-maven-plugin.version>
+        
         <reflections.version>0.10.2</reflections.version>
-        <fabric8.version>5.11.1</fabric8.version>
-        <kubernetes-client-java.version>14.0.0</kubernetes-client-java.version>
-        <spring-javaformat-maven-plugin.version>0.0.29</spring-javaformat-maven-plugin.version>
+        
+        <fabric8.version>5.11.2</fabric8.version>
+        
+        <spring-javaformat-maven-plugin.version>
+            0.0.35
+        </spring-javaformat-maven-plugin.version>
+
     </properties>
 
     <distributionManagement>
+        
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+
         <repository>
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
+
     </distributionManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.experimental</groupId>
-            <artifactId>graphql-spring-boot-starter</artifactId>
-            <version>1.0.0-M4</version>
-            <optional>true</optional>
-        </dependency>
+
         <dependency>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
-            <version>[4.0,)</version>
+            <version>4.1.1</version>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <optional>true</optional>
         </dependency>
+        
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-client</artifactId>
             <version>${fabric8.version}</version>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>io.kubernetes</groupId>
-            <artifactId>client-java-spring-integration</artifactId>
-            <version>${kubernetes-client-java.version}</version>
-            <optional>true</optional>
-        </dependency>
 
-        <!--      -->
-        <dependency>
-            <groupId>org.graalvm.nativeimage</groupId>
-            <artifactId>graal-hotspot-library</artifactId>
-            <version>${graalvm.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!--        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>${reflections.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.experimental</groupId>
-            <artifactId>spring-native</artifactId>
-            <version>${spring-native.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.experimental</groupId>
-            <artifactId>spring-aot</artifactId>
-            <scope>provided</scope>
-            <version>${spring-native.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -184,51 +165,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--  <plugin>
-                  <groupId>org.jfrog.buildinfo</groupId>
-                  <artifactId>artifactory-maven-plugin</artifactId>
-                  <version>${artifactory-maven-plugin.version}</version>
-                  <inherited>false</inherited>
-                  <executions>
-                      <execution>
-                          <id>build-info</id>
-                          <goals>
-                              <goal>publish</goal>
-                          </goals>
-                          <configuration>
-                              <deployProperties>
-                                  <build.vcsRevision>
-                                      {{GITHUB_SHA}}
-                                  </build.vcsRevision>
-                              </deployProperties>
-                              <publisher>
-                                  <contextUrl>
-                                      https://cloudnativejava.jfrog.io/cloudnativejava
-                                  </contextUrl>
-                                  <username>${env.ARTIFACTORY_USERNAME}
-                                  </username>
-                                  <password>${env.ARTIFACTORY_PASSWORD}
-                                  </password>
-                                  <repoKey>libs-release-local</repoKey>
-                                  <snapshotRepoKey>libs-snapshot-local
-                                  </snapshotRepoKey>
-                              </publisher>
-                              <buildInfo>
-                                  <agentName>Github Actions</agentName>
-                                  <buildNumber>{{GITHUB_RUN_ID}}
-                                  </buildNumber>
-                                  <buildUrl>
-                                      http://github.com/{{GITHUB_REPOSITORY}}/actions/runs/{{GITHUB_RUN_ID}}
-                                  </buildUrl>
-                                  <principal>{{USER}}</principal>
-                                  <vcsRevision>{{GITHUB_SHA}}</vcsRevision>
-                              </buildInfo>
-                          </configuration>
-                      </execution>
-                  </executions>
-              </plugin>-->
-
             <plugin>
                 <inherited>true</inherited>
                 <groupId>io.spring.javaformat</groupId>
@@ -246,47 +182,4 @@
             </plugin>
         </plugins>
     </build>
-   <!-- <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>libs-release</name>
-            <url>
-                https://cloudnativejava.jfrog.io/cloudnativejava/libs-release
-            </url>
-        </repository>
-        <repository>
-            <snapshots/>
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>
-                https://cloudnativejava.jfrog.io/cloudnativejava/libs-snapshot
-            </url>
-        </repository>
-
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>plugins-release</name>
-            <url>
-                https://cloudnativejava.jfrog.io/cloudnativejava/plugins-release
-            </url>
-        </pluginRepository>
-        <pluginRepository>
-            <snapshots/>
-            <id>snapshots</id>
-            <name>plugins-snapshot</name>
-            <url>
-                https://cloudnativejava.jfrog.io/cloudnativejava/plugins-snapshot
-            </url>
-        </pluginRepository>
-    </pluginRepositories>
--->
-
 </project>

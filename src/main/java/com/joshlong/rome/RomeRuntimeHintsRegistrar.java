@@ -1,6 +1,8 @@
 package com.joshlong.rome;
 
 import com.joshlong.HintsUtils;
+import com.rometools.rome.feed.synd.SyndEntry;
+import org.reflections.Reflections;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -9,6 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -23,8 +26,11 @@ public class RomeRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
 		var mcs = MemberCategory.values();
 
+		var reflections = new Reflections("com.rometools.rome");
+		reflections.getSubTypesOf(Serializable.class).forEach(c -> hints.reflection().registerType(c, mcs));
+
 		// rome
-		for (var c : new Class<?>[] { com.rometools.rome.feed.module.DCModuleImpl.class })
+		for (var c : new Class<?>[] { SyndEntry.class, com.rometools.rome.feed.module.DCModuleImpl.class })
 			hints.reflection().registerType(c, mcs);
 
 		var resource = new ClassPathResource("/com/rometools/rome/rome.properties");

@@ -3,13 +3,14 @@ package com.joshlong;
 import com.joshlong.kubernetes.fabric8.Fabric8BeanFactoryInitializationAotProcessor;
 import com.joshlong.kubernetes.fabric8.Fabric8RuntimeHintsRegistrar;
 import com.joshlong.liquibase.LiquibaseRuntimeHintsRegistrar;
+import com.joshlong.rome.RomeRuntimeHintsRegistrar;
 import com.joshlong.twitter4j.Twitter4jRuntimeHintsRegistrar;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportRuntimeHints;
 
 @Configuration
-@ImportRuntimeHints({ CommonNativeConfiguration.class, Fabric8RuntimeHintsRegistrar.class,
+@ImportRuntimeHints({ RomeRuntimeHintsRegistrar.class, Fabric8RuntimeHintsRegistrar.class,
 		LiquibaseRuntimeHintsRegistrar.class, Twitter4jRuntimeHintsRegistrar.class })
 class HintsAutoConfiguration {
 

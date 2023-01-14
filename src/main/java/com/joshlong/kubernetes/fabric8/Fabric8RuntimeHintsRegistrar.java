@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
  * the official Kubernetes Java client</a>, there's support in that project directly.
  *
  * @author Josh Long
- *
  */
 @Slf4j
 public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
@@ -41,13 +40,15 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
 	@Override
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+
 		if (!HintsUtils.isClassPresent("io.fabric8.kubernetes.api.model.KubernetesResource"))
 			return;
 
 		if (log.isDebugEnabled())
 			log.debug("running " + Fabric8RuntimeHintsRegistrar.class.getName());
 
-		var impls = reflections.getAllTypes()//
+		var impls = reflections//
+				.getAllTypes()//
 				.stream()//
 				.filter(cname -> cname.endsWith("Impl")) //
 				.map((Function<String, Class<?>>) this::forName)//

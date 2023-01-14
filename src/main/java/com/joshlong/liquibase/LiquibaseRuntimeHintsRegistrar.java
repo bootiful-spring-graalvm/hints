@@ -74,8 +74,11 @@ public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		for (var b : this.bundles)
 			hints.resources().registerResourceBundle(b);
 
-		for (var r : this.resources)
-			hints.resources().registerResource(new ClassPathResource(r));
+		for (var r : Arrays.stream(this.resources)//
+				.map(ClassPathResource::new)//
+				.filter(ClassPathResource::exists)//
+				.toList())
+			hints.resources().registerResource(r);
 
 		var values = MemberCategory.values();
 		for (var c : compositeTypes)

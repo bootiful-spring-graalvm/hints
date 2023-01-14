@@ -1,2 +1,2 @@
 #!/usr/bin/env bash 
-mvn -DskipTests=true clean install 
+mvn -DskipTests=true spring-javaformat:apply clean install

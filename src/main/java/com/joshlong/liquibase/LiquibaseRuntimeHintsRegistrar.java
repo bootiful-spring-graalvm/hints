@@ -5,15 +5,12 @@ import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.serializer.LiquibaseSerializable;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
-import org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.NativeConfigurationRegistry;
-import org.springframework.aot.context.bootstrap.generator.infrastructure.nativex.NativeResourcesEntry;
-import org.springframework.nativex.AotOptions;
-import org.springframework.nativex.hint.TypeAccess;
-import org.springframework.nativex.type.NativeConfiguration;
-import org.springframework.util.ClassUtils;
+import org.springframework.aot.hint.MemberCategory;
+import org.springframework.aot.hint.RuntimeHints;
+import org.springframework.aot.hint.RuntimeHintsRegistrar;
+import org.springframework.core.io.ClassPathResource;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,7 +24,7 @@ import java.util.stream.Collectors;
  * @author Josh Long
  */
 @Slf4j
-public class LiquibaseNativeConfiguration implements NativeConfiguration {
+public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
 	private final String[] typeNames = { "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl",
 			"com.sun.xml.internal.stream.events.XMLEventFactoryImpl",
@@ -41,11 +38,9 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 	private final String[] bundles = { "liquibase/i18n/liquibase-core", };
 
 	@Override
-	@SneakyThrows
-	public void computeHints(NativeConfigurationRegistry registry, AotOptions aotOptions) {
+	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
 
-		log.info("evaluating " + getClass().getName());
-		if (!ClassUtils.isPresent("liquibase.plugin.AbstractPlugin", getClass().getClassLoader()))
+		if (!HintsUtils.isClassPresent("liquibase.plugin.AbstractPlugin"))
 			return;
 
 		var types = new Class<?>[] { liquibase.lockservice.StandardLockService.class,
@@ -77,14 +72,17 @@ public class LiquibaseNativeConfiguration implements NativeConfiguration {
 		compositeTypes.addAll(Arrays.stream(this.typeNames).map(HintsUtils::classForName).collect(Collectors.toSet()));
 
 		for (var b : this.bundles)
-			registry.resources().add(NativeResourcesEntry.ofBundle(b));
+			hints.resources().registerResourceBundle(b);
 
-		for (var r : this.resources)
-			registry.resources().add(NativeResourcesEntry.of(r));
+		for (var r : Arrays.stream(this.resources)//
+				.map(ClassPathResource::new)//
+				.filter(ClassPathResource::exists)//
+				.toList())
+			hints.resources().registerResource(r);
 
-		var values = TypeAccess.values();
+		var values = MemberCategory.values();
 		for (var c : compositeTypes)
-			registry.reflection().forType(c).withAccess(values).build();
+			hints.reflection().registerType(c, values);
 
 		log.info("registered " + compositeTypes.size() + " types for reflection for Liquibase");
 

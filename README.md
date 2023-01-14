@@ -1,5 +1,13 @@
-# GraalVM Spring Native Hints 
+# Spring Boot 3 AOT GraalVM Hints  
 
-This project serves as an aggregation of all the [various  Spring Native hints](https://docs.spring.io/spring-native/docs/current/reference/htmlsingle/) I've built out for various components in the java ecosystem that don't necessarily fit in Spring Native or in Spring Boot. 
+This project serves as an aggregation of all the [various  Spring Boot AOT hints](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) I've built out for various components in the java ecosystem that don't necessarily fit in Spring Native or in Spring Boot. 
 
-Then create a [Spring Native-aware project on the Spring Initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.6.3&packaging=jar&jvmVersion=17&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=native) and enjoy!
+Then create a [Spring Boot 3 project on the Spring Initializr](https://start.spring.io), and enjoy!
+
+## Deprecations 
+
+This projects is now targeting Spring Boot 3, not Spring Native, as that work has been subsumed as part of the Spring Boot 3 release, which shipped in November 2022. 
+
+I got support for the official Kubernetes Java client already merged into that codebase, so there's no point in supporting it here.
+
+I got support for GraphQL merged into the Spring for GraphQL and Spring Boot GraphQL starter, so there's no point in supporting that here, either.  

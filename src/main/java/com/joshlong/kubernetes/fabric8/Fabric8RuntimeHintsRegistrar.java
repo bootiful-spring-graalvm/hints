@@ -3,9 +3,9 @@ package com.joshlong.kubernetes.fabric8;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joshlong.HintsUtils;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.Client;
-import io.fabric8.kubernetes.client.ExtensionAdapter;
-import io.fabric8.kubernetes.client.utils.KubernetesResourceUtil;
+import io.fabric8.kubernetes.client.extension.ExtensionAdapter;
 import io.fabric8.kubernetes.internal.KubernetesDeserializer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +54,7 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 				.filter(cname -> cname.endsWith("Impl")) //
 				.map((Function<String, Class<?>>) this::forName)//
 				.collect(Collectors.toSet());
-		var subtypesOfKubernetesResource = reflections.getSubTypesOf(KubernetesResourceUtil.class);
+		var subtypesOfKubernetesResource = reflections.getSubTypesOf(KubernetesResource.class);
 		var othersToAddForReflection = List.of(KubernetesDeserializer.class);
 		var clients = this.reflections.getSubTypesOf(Client.class);
 		var combined = new HashSet<Class<?>>();
@@ -88,8 +89,9 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 				try {
 					classes.add(Class.forName(clazz.getTypeName()));
 				}
-				catch (ClassNotFoundException e) {
-					ReflectionUtils.rethrowRuntimeException(e);
+				catch (UndeclaredThrowableException | ClassNotFoundException e) {
+					log.error("couldn't register ", e);
+					// ReflectionUtils.rethrowRuntimeException(e);
 				}
 
 			});

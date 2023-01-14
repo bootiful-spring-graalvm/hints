@@ -34,7 +34,8 @@
         <java.version>17</java.version>
         <lucene.version>8.6.2</lucene.version>
         <reflections.version>0.10.2</reflections.version>
-        <fabric8.version>5.11.2</fabric8.version>
+        <!--        <fabric8.version>5.11.2</fabric8.version>-->
+        <fabric8.version>6.3.1</fabric8.version>
         <spring-javaformat-maven-plugin.version>0.0.35</spring-javaformat-maven-plugin.version>
     </properties>
 

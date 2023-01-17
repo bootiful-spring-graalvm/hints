@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  * <a href="https://twitter.com/mRaible">Matt Raible</a> did.
  *
  * @author Josh Long
+ *
  */
 @Slf4j
 public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {

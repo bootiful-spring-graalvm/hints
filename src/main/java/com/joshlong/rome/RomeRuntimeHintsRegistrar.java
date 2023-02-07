@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -30,7 +31,7 @@ public class RomeRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		reflections.getSubTypesOf(Serializable.class).forEach(c -> hints.reflection().registerType(c, mcs));
 
 		// rome
-		for (var c : new Class<?>[] { SyndEntry.class, com.rometools.rome.feed.module.DCModuleImpl.class })
+		for (var c : new Class<?>[] { Date.class, SyndEntry.class, com.rometools.rome.feed.module.DCModuleImpl.class })
 			hints.reflection().registerType(c, mcs);
 
 		var resource = new ClassPathResource("/com/rometools/rome/rome.properties");

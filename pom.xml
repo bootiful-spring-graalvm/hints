@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.joshlong</groupId>
     <artifactId>hints</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.7</version>
     <developers>
         <developer>
             <name>Josh Long</name>

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.joshlong</groupId>
     <artifactId>hints</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.5</version>
     <developers>
         <developer>
             <name>Josh Long</name>
@@ -52,11 +52,11 @@
     </distributionManagement>
 
     <dependencies>
-<!--        <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-feed</artifactId>
-            <version>${spring-integration.version}</version>
-        </dependency>-->
+        <!--        <dependency>
+                    <groupId>org.springframework.integration</groupId>
+                    <artifactId>spring-integration-feed</artifactId>
+                    <version>${spring-integration.version}</version>
+                </dependency>-->
         <dependency>
             <groupId>com.rometools</groupId>
             <artifactId>rome</artifactId>

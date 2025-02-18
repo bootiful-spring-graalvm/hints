@@ -2,7 +2,6 @@ package com.joshlong.kubernetes.fabric8;
 
 import com.joshlong.HintsUtils;
 import io.fabric8.kubernetes.client.CustomResource;
-import io.fabric8.kubernetes.client.CustomResourceList;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.springframework.aot.hint.MemberCategory;
@@ -37,7 +36,13 @@ public class Fabric8BeanFactoryInitializationAotProcessor implements BeanFactory
 				var reflections = new Reflections(pkg);
 				var customResources = reflections.getSubTypesOf(CustomResource.class);
 				registerMe.addAll(customResources);
-				registerMe.addAll(reflections.getSubTypesOf(CustomResourceList.class));
+				if (!HintsUtils.isClassPresent("io.fabric8.kubernetes.client.CustomResourceList")) { // removed in fabric8 v7, thus only add if present
+					try {
+						registerMe.addAll(reflections.getSubTypesOf(Class.forName("io.fabric8.kubernetes.client.CustomResourceList")));
+					} catch (ClassNotFoundException e) {
+						ReflectionUtils.rethrowRuntimeException(e);
+					}
+				}
 				customResources.forEach(cr -> GenericTypeResolver.getTypeVariableMap(cr).forEach((tv, clazz) -> {
 					try {
 						var type = Class.forName(clazz.getTypeName());

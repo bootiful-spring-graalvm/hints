@@ -36,7 +36,7 @@ public class Fabric8BeanFactoryInitializationAotProcessor implements BeanFactory
 				var reflections = new Reflections(pkg);
 				var customResources = reflections.getSubTypesOf(CustomResource.class);
 				registerMe.addAll(customResources);
-				if (!HintsUtils.isClassPresent("io.fabric8.kubernetes.client.CustomResourceList")) { // removed in fabric8 v7, thus only add if present
+				if (HintsUtils.isClassPresent("io.fabric8.kubernetes.client.CustomResourceList")) { // removed in fabric8 v7, thus only add if present
 					try {
 						registerMe.addAll(reflections.getSubTypesOf(Class.forName("io.fabric8.kubernetes.client.CustomResourceList")));
 					} catch (ClassNotFoundException e) {

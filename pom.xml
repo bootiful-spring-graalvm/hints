@@ -10,7 +10,12 @@
     </parent>
     <groupId>com.joshlong</groupId>
     <artifactId>hints</artifactId>
-    <version>0.0.12-SNAPSHOT</version>
+    <version>0.0.12</version>
+    <description>
+        this project is an aggregation of a bunch of (hopefully) useful AOT hints for
+        various projects, to be used in the context of a Spring Boot application.
+    </description>
+    <url>https://github.com/bootiful-spring-graalvm</url>
     <developers>
         <developer>
             <name>Josh Long</name>

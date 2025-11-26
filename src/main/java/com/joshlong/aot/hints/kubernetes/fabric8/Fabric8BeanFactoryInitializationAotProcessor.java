@@ -1,10 +1,12 @@
 package com.joshlong.aot.hints.kubernetes.fabric8;
 
 import com.joshlong.aot.hints.HintsUtils;
+import io.fabric8.kubernetes.api.model.DefaultKubernetesResourceList;
 import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.CustomResourceList;
-import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.beans.factory.aot.BeanFactoryInitializationAotContribution;
 import org.springframework.beans.factory.aot.BeanFactoryInitializationAotProcessor;
@@ -20,10 +22,12 @@ import java.util.HashSet;
  *
  * @author Josh Long
  */
-@Slf4j
 public class Fabric8BeanFactoryInitializationAotProcessor implements BeanFactoryInitializationAotProcessor {
 
+	private final Logger log = LoggerFactory.getLogger(getClass());
+
 	@Override
+	@SuppressWarnings("deprecation")
 	public BeanFactoryInitializationAotContribution processAheadOfTime(ConfigurableListableBeanFactory beanFactory) {
 
 		if (!HintsUtils.isClassPresent("io.fabric8.kubernetes.client.CustomResource"))
@@ -38,11 +42,12 @@ public class Fabric8BeanFactoryInitializationAotProcessor implements BeanFactory
 				var customResources = reflections.getSubTypesOf(CustomResource.class);
 				registerMe.addAll(customResources);
 				registerMe.addAll(reflections.getSubTypesOf(CustomResourceList.class));
+				registerMe.addAll(reflections.getSubTypesOf(DefaultKubernetesResourceList.class));
 				customResources.forEach(cr -> GenericTypeResolver.getTypeVariableMap(cr).forEach((tv, clazz) -> {
 					try {
 						var type = Class.forName(clazz.getTypeName());
-						if (log.isDebugEnabled())
-							log.debug("the type variable is {} and the class is {}", type.getName(),
+						if (this.log.isDebugEnabled())
+							this.log.debug("the type variable is {} and the class is {}", type.getName(),
 									clazz.getTypeName());
 						registerMe.add(type);
 					} //

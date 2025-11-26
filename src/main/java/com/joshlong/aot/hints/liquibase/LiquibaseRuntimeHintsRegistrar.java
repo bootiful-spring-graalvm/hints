@@ -5,8 +5,9 @@ import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.serializer.LiquibaseSerializable;
-import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -22,10 +23,8 @@ import java.util.stream.Collectors;
  * <a href="https://twitter.com/mRaible">Matt Raible</a> did.
  *
  * @author Josh Long
- * @deprecated I am pretty sure that this should work OOTB now with later versions of
- * Spring Boot.
  */
-@Slf4j
+@Deprecated
 public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
 	private final String[] typeNames = { "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl",
@@ -38,6 +37,8 @@ public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			"www.liquibase.org/xml/ns/pro/liquibase-.*\\.xsd", };
 
 	private final String[] bundles = { "liquibase/i18n/liquibase-core", };
+
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Override
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
@@ -85,7 +86,7 @@ public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		for (var c : compositeTypes)
 			hints.reflection().registerType(c, values);
 
-		log.info("registered " + compositeTypes.size() + " types for reflection for Liquibase");
+		this.log.info("registered {} types for reflection for Liquibase", compositeTypes.size());
 
 	}
 

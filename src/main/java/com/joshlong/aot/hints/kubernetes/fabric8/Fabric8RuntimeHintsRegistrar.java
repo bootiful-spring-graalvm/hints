@@ -7,9 +7,10 @@ import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.Client;
 import io.fabric8.kubernetes.client.extension.ExtensionAdapter;
 import io.fabric8.kubernetes.internal.KubernetesDeserializer;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -28,14 +29,15 @@ import java.util.stream.Collectors;
 /**
  * Spring Boot 3 AOT support for the <a href="https://fabric8.io/">Fabric8 Kubernetes
  * client</a>.
- *
+ * <p>
  * Alternatively, if you want to use <a href="https://github.com/kubernetes-client/java">
  * the official Kubernetes Java client</a>, there's support in that project directly.
  *
  * @author Josh Long
  */
-@Slf4j
 public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
+
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private final Reflections reflections = new Reflections("io.fabric8");
 
@@ -49,7 +51,7 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			log.debug("running " + Fabric8RuntimeHintsRegistrar.class.getName());
 
 		var impls = reflections//
-			.getAllTypes()//
+			.getAll(Scanners.SubTypes)//
 			.stream()//
 			.filter(cname -> cname.endsWith("Impl")) //
 			.map((Function<String, Class<?>>) this::forName)//
@@ -73,9 +75,13 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		});
 	}
 
-	@SneakyThrows
 	private Class<?> forName(String name) {
-		return Class.forName(name);
+		try {
+			return Class.forName(name);
+		}
+		catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private Set<Class<?>> registerExtensionAdapters() {
@@ -99,26 +105,32 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		return classes;
 	}
 
-	@SneakyThrows
 	private <R extends Annotation> Set<Class<?>> resolveSerializationClasses(Class<R> annotationClazz) {
-		log.info("trying to resolve types annotated with " + annotationClazz.getName());
-		var method = annotationClazz.getMethod("using");
-		var classes = this.reflections.getTypesAnnotatedWith(annotationClazz);
-		return classes.stream().map(clazzWithAnnotation -> {
-			if (log.isInfoEnabled()) {
-				log.info("found " + clazzWithAnnotation.getName() + " : " + annotationClazz.getName());
-			}
-			var annotation = clazzWithAnnotation.getAnnotation(annotationClazz);
-			try {
-				if (annotation != null) {
-					return (Class<?>) method.invoke(annotation);
-				}
-			}
-			catch (Exception e) {
-				ReflectionUtils.rethrowRuntimeException(e);
-			}
-			return null;
-		}).collect(Collectors.toSet());
+		try {
+			this.log.info("trying to resolve types annotated with {}", annotationClazz.getName());
+			var method = annotationClazz.getMethod("using");
+			var classes = this.reflections.getTypesAnnotatedWith(annotationClazz);
+			return classes.stream() //
+				.map(clazzWithAnnotation -> {
+					if (this.log.isInfoEnabled()) {
+						this.log.info("found {} : {}", clazzWithAnnotation.getName(), annotationClazz.getName());
+					}
+					var annotation = clazzWithAnnotation.getAnnotation(annotationClazz);
+					try {
+						if (annotation != null) {
+							return (Class<?>) method.invoke(annotation);
+						}
+					}
+					catch (Exception e) {
+						ReflectionUtils.rethrowRuntimeException(e);
+					}
+					return null;
+				}) //
+				.collect(Collectors.toSet());
+		} //
+		catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

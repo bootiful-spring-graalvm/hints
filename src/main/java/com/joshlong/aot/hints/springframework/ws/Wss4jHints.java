@@ -13,7 +13,7 @@ import org.springframework.util.ReflectionUtils;
 import java.util.Map;
 
 /**
- * Supports GraalVM native image hints for WSS4J security integration with Spring WS.
+ * Supports  hints for WSS4J security integration (to be used, e.g., with Spring WS.)
  *
  * @author Josh Long
  */

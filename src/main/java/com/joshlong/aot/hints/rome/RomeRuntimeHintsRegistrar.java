@@ -17,6 +17,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * Want to serve RSS or ATOM feeds from your GraalVM application? Of course you do. Now, you can.
+ *
+ * @author Josh Long
+ */
 public class RomeRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
 	@Override

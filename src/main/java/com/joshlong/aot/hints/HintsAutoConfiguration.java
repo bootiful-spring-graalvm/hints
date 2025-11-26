@@ -10,6 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportRuntimeHints;
 
+/**
+ *
+ * most of the hints stem from this autoconfiguration class, thought there are some others.
+ *
+ * @author Josh Long
+ */
 @Configuration
 @ImportRuntimeHints({ EclipsePahoRuntimeHintsRegistrar.class, RomeRuntimeHintsRegistrar.class,
 		Fabric8RuntimeHintsRegistrar.class, LiquibaseRuntimeHintsRegistrar.class,

@@ -1,6 +1,6 @@
-package com.joshlong.mqtt;
+package com.joshlong.aot.hints.mqtt;
 
-import com.joshlong.HintsUtils;
+import com.joshlong.aot.hints.HintsUtils;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -25,13 +25,16 @@ public class EclipsePahoRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			return;
 
 		var values = MemberCategory.values();
-		Stream.of("org.eclipse.paho.client.mqttv3.logging.JSR47Logger",
-				"org.eclipse.paho.mqttv5.client.logging.JSR47Logger").map(TypeReference::of)
-				.forEach(tr -> hints.reflection().registerType(tr, values));
-		Stream.of("org/eclipse/paho/client/mqttv3/internal/nls/messages",
-				"org/eclipse/paho/client/mqttv3/internal/nls/logcat", "org/eclipse/paho/mqttv5/common/nls/messages",
-				"org/eclipse/paho/mqttv5/client/internal/nls/logcat")
-				.forEach(bundle -> hints.resources().registerResourceBundle(bundle));
+		Stream
+			.of("org.eclipse.paho.client.mqttv3.logging.JSR47Logger",
+					"org.eclipse.paho.mqttv5.client.logging.JSR47Logger")
+			.map(TypeReference::of)
+			.forEach(tr -> hints.reflection().registerType(tr, values));
+		Stream
+			.of("org/eclipse/paho/client/mqttv3/internal/nls/messages",
+					"org/eclipse/paho/client/mqttv3/internal/nls/logcat", "org/eclipse/paho/mqttv5/common/nls/messages",
+					"org/eclipse/paho/mqttv5/client/internal/nls/logcat")
+			.forEach(bundle -> hints.resources().registerResourceBundle(bundle));
 	}
 
 }

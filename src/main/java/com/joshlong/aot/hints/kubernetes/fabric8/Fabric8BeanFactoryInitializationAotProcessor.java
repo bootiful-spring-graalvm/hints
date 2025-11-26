@@ -1,6 +1,6 @@
-package com.joshlong.kubernetes.fabric8;
+package com.joshlong.aot.hints.kubernetes.fabric8;
 
-import com.joshlong.HintsUtils;
+import com.joshlong.aot.hints.HintsUtils;
 import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.CustomResourceList;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +42,8 @@ public class Fabric8BeanFactoryInitializationAotProcessor implements BeanFactory
 					try {
 						var type = Class.forName(clazz.getTypeName());
 						if (log.isDebugEnabled())
-							log.debug("the type variable is " + type.getName() + " and the class is "
-									+ clazz.getTypeName());
+							log.debug("the type variable is {} and the class is {}", type.getName(),
+									clazz.getTypeName());
 						registerMe.add(type);
 					} //
 					catch (ClassNotFoundException e) {

@@ -1,4 +1,4 @@
-package com.joshlong;
+package com.joshlong.aot.hints;
 
 import org.springframework.util.ClassUtils;
 

@@ -1,6 +1,6 @@
-package com.joshlong.rome;
+package com.joshlong.aot.hints.rome;
 
-import com.joshlong.HintsUtils;
+import com.joshlong.aot.hints.HintsUtils;
 import com.rometools.rome.feed.synd.SyndEntry;
 import org.reflections.Reflections;
 import org.springframework.aot.hint.MemberCategory;
@@ -53,8 +53,10 @@ public class RomeRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		Assert.hasText(propertyName, "the propertyName must not be null");
 		Assert.hasText(propertyValue, "the propertyValue must not be null");
 		return Arrays //
-				.stream((propertyValue.contains(" ")) ? propertyValue.split(" ") : new String[] { propertyValue }) //
-				.map(String::trim).filter(xValue -> !xValue.strip().equals("")).toList();
+			.stream((propertyValue.contains(" ")) ? propertyValue.split(" ") : new String[] { propertyValue }) //
+			.map(String::trim)
+			.filter(xValue -> !xValue.strip().equals(""))
+			.toList();
 	}
 
 }

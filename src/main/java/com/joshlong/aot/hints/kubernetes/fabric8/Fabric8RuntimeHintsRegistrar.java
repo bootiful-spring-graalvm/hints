@@ -1,8 +1,8 @@
-package com.joshlong.kubernetes.fabric8;
+package com.joshlong.aot.hints.kubernetes.fabric8;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joshlong.HintsUtils;
+import com.joshlong.aot.hints.HintsUtils;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.Client;
 import io.fabric8.kubernetes.client.extension.ExtensionAdapter;
@@ -49,11 +49,11 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			log.debug("running " + Fabric8RuntimeHintsRegistrar.class.getName());
 
 		var impls = reflections//
-				.getAllTypes()//
-				.stream()//
-				.filter(cname -> cname.endsWith("Impl")) //
-				.map((Function<String, Class<?>>) this::forName)//
-				.collect(Collectors.toSet());
+			.getAllTypes()//
+			.stream()//
+			.filter(cname -> cname.endsWith("Impl")) //
+			.map((Function<String, Class<?>>) this::forName)//
+			.collect(Collectors.toSet());
 		var subtypesOfKubernetesResource = reflections.getSubTypesOf(KubernetesResource.class);
 		var othersToAddForReflection = List.of(KubernetesDeserializer.class);
 		var clients = this.reflections.getSubTypesOf(Client.class);

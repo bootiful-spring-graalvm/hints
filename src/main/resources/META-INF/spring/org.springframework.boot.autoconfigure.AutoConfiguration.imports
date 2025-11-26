@@ -1,1 +1,2 @@
-com.joshlong.HintsAutoConfiguration
+com.joshlong.aot.hints.HintsAutoConfiguration
+com.joshlong.aot.hints.springframework.ws.SpringWsConfiguration

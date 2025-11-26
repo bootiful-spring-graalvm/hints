@@ -1,7 +1,6 @@
-package com.joshlong.twitter4j;
+package com.joshlong.aot.hints.twitter4j;
 
-import com.joshlong.HintsUtils;
-import lombok.extern.slf4j.Slf4j;
+import com.joshlong.aot.hints.HintsUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.message.DefaultFlowMessageFactory;
 import org.apache.logging.log4j.message.ParameterizedMessageFactory;
@@ -30,13 +29,14 @@ public class Twitter4jRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		var memberCategories = MemberCategory.values();
 		var reflections = new Reflections("twitter4j");
 		List.of(ServiceLoader.class, DefaultFlowMessageFactory.class, ParameterizedMessageFactory.class,
-				LogManager.class).forEach(o -> hints.reflection().registerType(o, memberCategories));
+				LogManager.class)
+			.forEach(o -> hints.reflection().registerType(o, memberCategories));
 		List.of("twitter4j.UserJSONImpl", "twitter4j.StatusJSONImpl", "twitter4j.TwitterImpl")
-				.forEach(s -> hints.reflection().registerType(TypeReference.of(s), memberCategories));
+			.forEach(s -> hints.reflection().registerType(TypeReference.of(s), memberCategories));
 		List.of(java.lang.String[].class, long[].class, java.util.Date.class)
-				.forEach(t -> hints.reflection().registerType(t, memberCategories));
+			.forEach(t -> hints.reflection().registerType(t, memberCategories));
 		reflections.getSubTypesOf(Serializable.class)
-				.forEach(t -> hints.reflection().registerType(t, memberCategories));
+			.forEach(t -> hints.reflection().registerType(t, memberCategories));
 		reflections.getSubTypesOf(TweetEntity.class).forEach(t -> hints.reflection().registerType(t, memberCategories));
 	}
 

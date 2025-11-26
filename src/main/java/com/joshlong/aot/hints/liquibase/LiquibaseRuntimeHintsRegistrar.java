@@ -1,6 +1,6 @@
-package com.joshlong.liquibase;
+package com.joshlong.aot.hints.liquibase;
 
-import com.joshlong.HintsUtils;
+import com.joshlong.aot.hints.HintsUtils;
 import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.datatype.LiquibaseDataType;
@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
  * <a href="https://twitter.com/mRaible">Matt Raible</a> did.
  *
  * @author Josh Long
- *
+ * @deprecated I am pretty sure that this should work OOTB now with later versions of
+ * Spring Boot.
  */
 @Slf4j
 public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
@@ -51,12 +52,11 @@ public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 				liquibase.sql.visitor.RegExpReplaceSqlVisitor.class, liquibase.change.ConstraintsConfig.class,
 				liquibase.sql.visitor.PrependSqlVisitor.class, liquibase.license.LicenseServiceFactory.class,
 				liquibase.configuration.GlobalConfiguration.class, liquibase.changelog.RanChangeSet.class,
-				liquibase.hub.HubServiceFactory.class, liquibase.AbstractExtensibleObject.class,
-				liquibase.configuration.LiquibaseConfiguration.class, liquibase.change.ChangeFactory.class,
-				liquibase.changelog.StandardChangeLogHistoryService.class, liquibase.database.jvm.JdbcConnection.class,
-				liquibase.sql.visitor.ReplaceSqlVisitor.class, liquibase.change.ColumnConfig.class,
-				liquibase.executor.ExecutorService.class, liquibase.logging.core.LogServiceFactory.class,
-				liquibase.executor.jvm.JdbcExecutor.class, };
+				liquibase.AbstractExtensibleObject.class, liquibase.configuration.LiquibaseConfiguration.class,
+				liquibase.change.ChangeFactory.class, liquibase.changelog.StandardChangeLogHistoryService.class,
+				liquibase.database.jvm.JdbcConnection.class, liquibase.sql.visitor.ReplaceSqlVisitor.class,
+				liquibase.change.ColumnConfig.class, liquibase.executor.ExecutorService.class,
+				liquibase.logging.core.LogServiceFactory.class, liquibase.executor.jvm.JdbcExecutor.class, };
 
 		var reflections = new Reflections("liquibase");
 		var changes = reflections.getSubTypesOf(Change.class);
@@ -76,9 +76,9 @@ public class LiquibaseRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			hints.resources().registerResourceBundle(b);
 
 		for (var r : Arrays.stream(this.resources)//
-				.map(ClassPathResource::new)//
-				.filter(ClassPathResource::exists)//
-				.toList())
+			.map(ClassPathResource::new)//
+			.filter(ClassPathResource::exists)//
+			.toList())
 			hints.resources().registerResource(r);
 
 		var values = MemberCategory.values();

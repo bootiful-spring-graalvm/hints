@@ -1,11 +1,11 @@
-package com.joshlong;
+package com.joshlong.aot.hints;
 
-import com.joshlong.kubernetes.fabric8.Fabric8BeanFactoryInitializationAotProcessor;
-import com.joshlong.kubernetes.fabric8.Fabric8RuntimeHintsRegistrar;
-import com.joshlong.liquibase.LiquibaseRuntimeHintsRegistrar;
-import com.joshlong.mqtt.EclipsePahoRuntimeHintsRegistrar;
-import com.joshlong.rome.RomeRuntimeHintsRegistrar;
-import com.joshlong.twitter4j.Twitter4jRuntimeHintsRegistrar;
+import com.joshlong.aot.hints.kubernetes.fabric8.Fabric8BeanFactoryInitializationAotProcessor;
+import com.joshlong.aot.hints.kubernetes.fabric8.Fabric8RuntimeHintsRegistrar;
+import com.joshlong.aot.hints.liquibase.LiquibaseRuntimeHintsRegistrar;
+import com.joshlong.aot.hints.mqtt.EclipsePahoRuntimeHintsRegistrar;
+import com.joshlong.aot.hints.rome.RomeRuntimeHintsRegistrar;
+import com.joshlong.aot.hints.twitter4j.Twitter4jRuntimeHintsRegistrar;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportRuntimeHints;

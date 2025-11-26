@@ -1,5 +1,6 @@
 package com.joshlong.aot.hints.springframework.ws;
 
+import com.joshlong.aot.hints.HintsUtils;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.aot.hint.MemberCategory;
@@ -62,7 +63,7 @@ class SpringWsHints implements RuntimeHintsRegistrar {
 	}
 
 	private void registerEndpoints(RuntimeHints hints, MemberCategory[] values) {
-		for (var a : AotUtils.findAllClasses(Endpoint.class.getPackageName()))
+		for (var a : HintsUtils.findAllClasses(Endpoint.class.getPackageName()))
 			hints.reflection().registerType(TypeReference.of(a), values);
 	}
 

@@ -1,5 +1,6 @@
 package com.joshlong.aot.hints.springframework.ws;
 
+import com.joshlong.aot.hints.HintsUtils;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.apache.wss4j.dom.engine.WSSConfig;
@@ -79,7 +80,7 @@ class SpringWsConfiguration {
 				@NonNull ConfigurableListableBeanFactory beanFactory) {
 			var classes = new HashSet<Class<?>>();
 			for (var pkg : AutoConfigurationPackages.get(beanFactory)) {
-				for (var c : AotUtils.findAllClasses(pkg)) {
+				for (var c : HintsUtils.findAllClasses(pkg)) {
 					if (this.isJaxbClass(c))
 						classes.add(c);
 				}

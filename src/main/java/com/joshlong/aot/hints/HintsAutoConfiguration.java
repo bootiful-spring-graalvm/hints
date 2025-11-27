@@ -12,7 +12,8 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 
 /**
  *
- * most of the hints stem from this autoconfiguration class, thought there are some others.
+ * most of the hints stem from this autoconfiguration class, thought there are some
+ * others.
  *
  * @author Josh Long
  */

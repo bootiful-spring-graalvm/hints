@@ -48,7 +48,7 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			return;
 
 		if (log.isDebugEnabled())
-            log.debug("running {}", Fabric8RuntimeHintsRegistrar.class.getName());
+			log.debug("running {}", Fabric8RuntimeHintsRegistrar.class.getName());
 
 		var impls = reflections//
 			.getAll(Scanners.SubTypes)//

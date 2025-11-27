@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.apache.wss4j.dom.engine.WSSConfig;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.TypeReference;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
@@ -43,8 +45,10 @@ import java.util.Set;
 @ImportRuntimeHints({ SpringWsHints.class })
 class SpringWsConfiguration {
 
+	private static final Logger log = LoggerFactory.getLogger(SpringWsConfiguration.class);
+
 	SpringWsConfiguration() {
-		LoggerFactory.getLogger(SpringWsConfiguration.class).debug("initializing AOT support for Spring WS");
+		LoggerFactory.getLogger(SpringWsConfiguration.class).info("initializing AOT support for Spring WS");
 	}
 
 	@Configuration
@@ -53,7 +57,7 @@ class SpringWsConfiguration {
 	static class Wss4jConfiguration {
 
 		Wss4jConfiguration() {
-			LoggerFactory.getLogger(Wss4jConfiguration.class).debug("initializing AOT support for Wss4j");
+			LoggerFactory.getLogger(Wss4jConfiguration.class).info("initializing AOT support for Wss4j");
 		}
 
 	}
@@ -95,6 +99,7 @@ class SpringWsConfiguration {
 		}
 
 		private boolean isJaxbClass(Class<?> clzz) {
+
 			var annotations = Set.of(XmlRootElement.class, XmlType.class, XmlAccessorType.class, XmlAccessorOrder.class,
 					XmlSeeAlso.class, XmlRegistry.class, XmlEnum.class, XmlTransient.class, XmlJavaTypeAdapter.class);
 			for (var jaxbRootAnnotation : annotations) {
@@ -137,6 +142,8 @@ class SpringWsConfiguration {
 
 	static class EndpointBeanFactoryInitializationAotProcessor implements BeanFactoryInitializationAotProcessor {
 
+		private final Logger log = LoggerFactory.getLogger(getClass());
+
 		@Override
 		public @Nullable BeanFactoryInitializationAotContribution processAheadOfTime(
 				ConfigurableListableBeanFactory beanFactory) {
@@ -144,9 +151,11 @@ class SpringWsConfiguration {
 			var endpoints = new HashSet<TypeReference>();
 			var beanNamesForAnnotation = beanFactory.getBeanNamesForAnnotation(Endpoint.class);
 			for (var beanName : beanNamesForAnnotation) {
+				this.log.info("Found endpoint bean name: {}", beanName);
 				var type = beanFactory.getType(beanName);
 				Assert.notNull(type, "the type for beanName " + beanName + " not found");
 				endpoints.add(TypeReference.of(type));
+				this.discover(endpoints, type);
 			}
 			return (generationContext, code) -> {
 				var runtimeHints = generationContext.getRuntimeHints().reflection();
@@ -154,6 +163,19 @@ class SpringWsConfiguration {
 					runtimeHints.registerType(tr, MemberCategory.values());
 				}
 			};
+		}
+
+		private void discover(Set<TypeReference> typeReferences, Class<?> endpoint) {
+			this.log.info("discovering input and return types on endpoint {}", endpoint.getName());
+			ReflectionUtils.doWithMethods(endpoint, method -> {
+				var returnType = method.getReturnType();
+				this.log.info("return type {}", returnType);
+				typeReferences.add(TypeReference.of(returnType));
+				for (var p : method.getParameterTypes()) {
+					typeReferences.add(TypeReference.of(p));
+					this.log.info("discovered parameter type {}", p);
+				}
+			});
 		}
 
 	}

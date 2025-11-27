@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Want to serve RSS or ATOM feeds from your GraalVM application? Of course you do. Now, you can.
+ * Want to serve RSS or ATOM feeds from your GraalVM application? Of course you do. Now,
+ * you can.
  *
  * @author Josh Long
  */

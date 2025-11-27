@@ -58,7 +58,8 @@ class SpringWsHints implements RuntimeHintsRegistrar {
 				"com/sun/org/apache/xml/internal/security/resource/xmlsecurity_en.properties" })
 			hints.resources().registerPattern(r);
 
-		for (var p : new String[] { "messages/wss4j_errors", "com.sun.xml.messaging.saaj.util.LocalStrings" })
+		for (var p : new String[] { "messages/wss4j_errors", "org.glassfish.jaxb.runtime.v2.runtime.Messages",
+				"com.sun.xml.messaging.saaj.util.LocalStrings" })
 			hints.resources().registerResourceBundle(p);
 	}
 

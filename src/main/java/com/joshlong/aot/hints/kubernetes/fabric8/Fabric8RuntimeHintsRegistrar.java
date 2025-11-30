@@ -116,6 +116,7 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 				if (this.log.isInfoEnabled()) {
 					this.log.info("found {} : {}", clazzWithAnnotation.getName(), annotationClazz.getName());
 				}
+				result.add(clazzWithAnnotation);
 				var annotation = clazzWithAnnotation.getAnnotation(annotationClazz);
 				try {
 					if (annotation != null) {

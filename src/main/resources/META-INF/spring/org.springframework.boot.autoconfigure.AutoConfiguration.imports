@@ -1,2 +1,7 @@
-com.joshlong.aot.hints.HintsAutoConfiguration
 com.joshlong.aot.hints.springframework.ws.SpringWsConfiguration
+com.joshlong.aot.hints.stripe.StripeAotAutoConfiguration
+com.joshlong.aot.hints.mqtt.EclipsePahoAotAutoConfiguration
+com.joshlong.aot.hints.rome.RomeAotAutoConfiguration
+com.joshlong.aot.hints.twitter4j.Twitter4jAotAutoConfiguration
+com.joshlong.aot.hints.liquibase.LiquibaseAotAutoConfiguration
+

@@ -11,7 +11,7 @@
     <groupId>com.joshlong</groupId>
     <name>hints</name>
     <artifactId>hints</artifactId>
-    <version>0.0.15-SNAPSHOT</version>
+    <version>0.0.15</version>
     <description>
         this project is an aggregation of a bunch of (hopefully) useful AOT hints for
         various projects, to be used in the context of a Spring Boot application.
@@ -58,7 +58,17 @@
     </distributionManagement>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-gson</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>31.0.0</version>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>com.rometools</groupId>
             <artifactId>rome</artifactId>

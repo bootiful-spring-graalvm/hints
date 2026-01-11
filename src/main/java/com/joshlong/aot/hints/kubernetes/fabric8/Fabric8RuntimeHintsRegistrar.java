@@ -110,23 +110,38 @@ public class Fabric8RuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			this.log.info("trying to resolve types annotated with {}", annotationClazz.getName());
 			var method = annotationClazz.getMethod("using");
 			var classes = this.reflections.getTypesAnnotatedWith(annotationClazz);
-			return classes.stream() //
-				.map(clazzWithAnnotation -> {
-					if (this.log.isInfoEnabled()) {
-						this.log.info("found {} : {}", clazzWithAnnotation.getName(), annotationClazz.getName());
-					}
-					var annotation = clazzWithAnnotation.getAnnotation(annotationClazz);
-					try {
-						if (annotation != null) {
-							return (Class<?>) method.invoke(annotation);
+			var result = new HashSet<Class<?>>();
+
+			classes.forEach(clazzWithAnnotation -> {
+				if (this.log.isInfoEnabled()) {
+					this.log.info("found {} : {}", clazzWithAnnotation.getName(), annotationClazz.getName());
+				}
+				result.add(clazzWithAnnotation);
+				var annotation = clazzWithAnnotation.getAnnotation(annotationClazz);
+				try {
+					if (annotation != null) {
+						// Add the serializer/deserializer class from the annotation
+						var serializerClass = (Class<?>) method.invoke(annotation);
+						if (serializerClass != null) {
+							result.add(serializerClass);
 						}
 					}
-					catch (Exception e) {
-						ReflectionUtils.rethrowRuntimeException(e);
+				}
+				catch (Exception e) {
+					ReflectionUtils.rethrowRuntimeException(e);
+				}
+
+				// Add all child classes (subclasses) of the annotated class
+				var subClasses = this.reflections.getSubTypesOf(clazzWithAnnotation);
+				subClasses.forEach(subClass -> {
+					if (this.log.isInfoEnabled()) {
+						this.log.info("found {} : {}", subClass.getName(), annotationClazz.getName());
 					}
-					return null;
-				}) //
-				.collect(Collectors.toSet());
+					result.add(subClass);
+				});
+			});
+
+			return result;
 		} //
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

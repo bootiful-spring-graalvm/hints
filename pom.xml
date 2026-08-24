@@ -11,7 +11,7 @@
     <groupId>com.joshlong</groupId>
     <name>hints</name>
     <artifactId>hints</artifactId>
-    <version>0.0.16-SNAPSHOT</version>
+    <version>0.0.16</version>
     <description>
         this project is an aggregation of a bunch of (hopefully) useful AOT hints for
         various projects, to be used in the context of a Spring Boot application.

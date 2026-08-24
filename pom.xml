@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0</version>
+        <version>4.1.0</version>
         <relativePath/>
     </parent>
     <groupId>com.joshlong</groupId>
@@ -37,6 +37,7 @@
         </license>
     </licenses>
     <properties>
+        <javafx.version>26.0.2</javafx.version>
         <java.version>17</java.version>
         <reflections.version>0.10.2</reflections.version>
         <fabric8.version>6.3.1</fabric8.version>
@@ -58,6 +59,16 @@
     </distributionManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-gson</artifactId>

@@ -4,4 +4,5 @@ com.joshlong.aot.hints.mqtt.EclipsePahoAotAutoConfiguration
 com.joshlong.aot.hints.rome.RomeAotAutoConfiguration
 com.joshlong.aot.hints.twitter4j.Twitter4jAotAutoConfiguration
 com.joshlong.aot.hints.liquibase.LiquibaseAotAutoConfiguration
+com.joshlong.aot.hints.javafx.JavaFxAutoConfiguration
 
